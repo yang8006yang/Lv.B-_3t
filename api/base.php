@@ -99,7 +99,7 @@ return $this->pdo->exec($sql);
     }
     public function max($col,...$arg)
     {
-        return $this->math('sum', $col,...$arg);
+        return $this->math('max', $col,...$arg);
     }
     public function min($col,...$arg)
     {
@@ -165,5 +165,6 @@ function qq($sql)
 }
 
 $TRAILER=new DB('trailer');
+$MOVIE=new DB('movie');
 
 

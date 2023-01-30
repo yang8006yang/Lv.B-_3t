@@ -30,10 +30,36 @@ class DB{
         }
         return $this->pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
     }
-
+    
     public function all(...$arg){
-        
+        $sql= "SELECT * from $this->table ";
+        if(isset($arg[0])){
+            if(is_array($arg[0])){
+                $tmp=$this->arrayTOSqlArray($arg[0]);
+                $sql= $sql ."WHERE ". join('&&',$tmp);    
+            }else{
+                $sql= $sql .$arg[0];
+            }
+        }
+        if(isset($arg[1])){
+            $sql= $sql .$arg[1];
+        }
+        return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function save($array){
+        if(isset($array['id'])){
+            $id= $array['id'];
+            unset($array['id']);
+            $tmp= $this->arrayTOSqlArray($array);
+            $sql= "UPDATE $this->table SET ". join(',',$tmp). "WHERE id=`$id`";
+        }else{
+            $cols= array_keys($array);
+            $sql="INSERT INTO `$this->table` (`". join('`,`',$cols) . "`) VALUES ('". join("','",$array) . "')";
+        }
+        return $this->pdo->exec($sql)
+    }
+
 }
 
 ?>
